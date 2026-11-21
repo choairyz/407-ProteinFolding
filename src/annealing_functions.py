@@ -3,7 +3,11 @@ from random import random
 import numpy as np
 import matplotlib.pyplot as plt
 from protein import Protein
-from random import randrange, choice, random
+from random import randrange, choice, random, seed
+
+
+seed_num = 1
+seed(seed_num)
 
 
 def acceptance(E_now, E_test, T):
