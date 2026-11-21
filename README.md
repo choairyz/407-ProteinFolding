@@ -4,10 +4,6 @@ Final project for PHY407 (Fall 2026), topic 3: Protein Folding.
 
 A Markov Chain Monte Carlo simulation with simulated annealing that folds a simplified 2D protein, starting from a shape you choose.
 
-<p align="center">
-  <img src="figures/example_folding.gif" alt="A 23-monomer chain folding as the temperature drops" width="400">
-</p>
-
 ## The model
 
 - A protein is a chain of N identical monomers on a rectangular `width` × `height` lattice (25 × 25 by default).
@@ -34,7 +30,6 @@ The run stops when T falls below T<sub>final</sub>, which takes about τ · ln(T
 | [`main/protein_folding_toolkit.py`](main/protein_folding_toolkit.py) | The settings, `build_protein(moves)` for the starting shape, `plot_states()` for the animation. Running it runs the simulation. |
 | [`main/build_protein.py`](main/build_protein.py) | The `Protein` class: monomer positions, `is_valid()`, `calc_energy()` and `Plot()`. |
 | [`main/annealing_functions.py`](main/annealing_functions.py) | `acceptance()` (Metropolis rule), `cooledT()` (cooling schedule) and `discreteAnnealing()` (the simulation loop). |
-| [`figures/`](figures) | The example animation. |
 
 ## Running it
 
@@ -66,7 +61,3 @@ initialProtein, N = build_protein('R' * 14)                  # straight chain of
 ```
 
 A string can't produce a broken chain, since every letter is one lattice step. If the shape runs into itself or leaves the lattice, `Protein` prints what's wrong.
-
-## Example
-
-The animation at the top is one run with the settings above, the 23-monomer starting shape `RURRRURRRRRRRURRRRRRRR` and `random.seed(2)`. It took 6,908 steps, and the energy went from 0 to −9.
