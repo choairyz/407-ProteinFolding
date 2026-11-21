@@ -14,7 +14,7 @@ class Protein:
         self.coords = [tuple(site) for site in coords]
         self.width = width
         self.height = height
-        self.is_valid() # prints the problem if the starting shape breaks the model
+        self.is_valid() 
         self.energy = self.calc_energy()
 
     def is_valid(self):
