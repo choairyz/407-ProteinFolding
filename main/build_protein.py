@@ -33,7 +33,7 @@ class Monomer:
         else:
             print(f"Error: location must be left, right, top or bot, got {location}")
 
-    def neighbours(self, linked_only: bool = False) -> list[tuple[str, Monomer]]:
+    def neighbours(self, linked_only=False):
         """(side, monomer) for each occupied side of self. With linked_only, returns chained neighbors only"""
         neighbours = []
         for side, n in (('left', self.left), ('right', self.right), ('top', self.top), ('bot', self.bot)):
@@ -41,7 +41,7 @@ class Monomer:
                 neighbours.append((side, n[0]))
         return neighbours
 
-    def chain_list(self) -> list[Monomer] | None:
+    def chain_list(self):
         """Walk along chain bonds starting at self until a monomer with only the previous monomer in the path as
         a neighbor is reached. Returns None if the bonds don't form a single open chain"""
         chain = [self]
@@ -60,7 +60,7 @@ class Monomer:
                 return None
             chain.append(curr)
 
-    def makeChain(self) -> list[Monomer] | None:
+    def makeChain(self):
         """Return every monomer in the chain containing self, from one end to the other (None if invalid)"""
         chain = self.chain_list() # go to one end of the chain
         if chain is None:
@@ -68,7 +68,7 @@ class Monomer:
         return chain[-1].chain_list() # go back to the other end
 
 
-def protein_from_monomers(monomers: list[Monomer], width=25, height=25) -> Protein | None:
+def protein_from_monomers(monomers: list[Monomer], width=25, height=25):
     """Turn Monomers linked with addMonomer into a Protein, centred in a width by height lattice"""
     chain = monomers[0].makeChain()
     if chain is None:
@@ -96,14 +96,14 @@ def protein_from_monomers(monomers: list[Monomer], width=25, height=25) -> Prote
 class Protein:
     """A single chain of monomers on a width x height rectangular lattice, stored as a list of (x, y) sites
     in chain order: monomer i is bonded to monomers i-1 and i+1. Sites run from (0, 0) to (width-1, height-1)"""
-    def __init__(self, coords: list[tuple[int, int]], width: int = 25, height: int = 25):
+    def __init__(self, coords: list[tuple[int, int]], width=25, height=25):
         self.coords = [tuple(site) for site in coords]
         self.width = width
         self.height = height
         self.is_valid() # prints the problem if the starting shape breaks the model
         self.energy = self.calc_energy()
 
-    def is_valid(self) -> bool:
+    def is_valid(self):
         """Check the chain fits the model: every monomer inside the lattice, no two on the same site, and each
         monomer one lattice step from the one before it. Prints the first problem found"""
         for i, (x, y) in enumerate(self.coords):
@@ -120,7 +120,7 @@ class Protein:
                 return False
         return True
 
-    def calc_energy(self) -> float:
+    def calc_energy(self):
         """epsilon times the number of adjacent monomer pairs that aren't bonded, counting each pair once"""
         index = {site: i for i, site in enumerate(self.coords)} # which monomer sits on each site
         contacts = 0
