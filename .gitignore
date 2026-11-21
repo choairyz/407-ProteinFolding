@@ -1,0 +1,8 @@
+# Python's compiled-file cache
+__pycache__/
+
+# macOS folder settings
+.DS_Store
+
+# virtual environment, if you make one
+.venv/

@@ -2,7 +2,7 @@
 from random import random
 import numpy as np
 import matplotlib.pyplot as plt
-from build_protein import Protein
+from protein import Protein
 from random import randrange, choice, random
 
 
@@ -19,26 +19,6 @@ def acceptance(E_now, E_test, T):
     else:
         return False
     
-
-def draw_normal_pm1(sigma):
-    """ Draw (+-1, +-1) based on a normal distribution of mean 0, standard dev sigma. """
-    theta = 2*np.pi*random()
-    z = random()
-    r = (-2*sigma**2 * np.log(1 - z))**.5
-    dx, dy = r*np.cos(theta), r*np.sin(theta)
-
-    if dx < 0.5:
-        dx = -1
-    else:
-        dx = 1
-
-    if dy < 0.5:
-        dy = -1
-    else:
-        dy = 1
-    
-    return dx, dy
-
 
 def cooledT(T0, tau, t):
     """Returns temperature T at time t given initial temperature T0 and decay constant tau, for simulated annealing."""

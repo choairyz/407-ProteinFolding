@@ -27,16 +27,22 @@ The run stops when T falls below T<sub>final</sub>, which takes about τ · ln(T
 
 | File | Contents |
 |---|---|
-| [`main/protein_folding_toolkit.py`](main/protein_folding_toolkit.py) | The settings, `build_protein(moves)` for the starting shape, `plot_states()` for the animation. Running it runs the simulation. |
-| [`main/build_protein.py`](main/build_protein.py) | The `Protein` class: monomer positions, `is_valid()`, `calc_energy()` and `Plot()`. |
-| [`main/annealing_functions.py`](main/annealing_functions.py) | `acceptance()` (Metropolis rule), `cooledT()` (cooling schedule) and `discreteAnnealing()` (the simulation loop). |
+| [`src/protein_folding_toolkit.py`](src/protein_folding_toolkit.py) | The settings, `build_protein(moves)` for the starting shape, `plot_states()` for the animation. Running it runs the simulation. |
+| [`src/protein.py`](src/protein.py) | The `Protein` class: monomer positions, `is_valid()`, `calc_energy()` and `Plot()`. |
+| [`src/annealing_functions.py`](src/annealing_functions.py) | `acceptance()` (Metropolis rule), `cooledT()` (cooling schedule) and `discreteAnnealing()` (the simulation loop). |
 
 ## Running it
 
-You need Python 3, NumPy and Matplotlib.
+You need Python 3, NumPy and Matplotlib. To install them:
 
 ```bash
-python main/protein_folding_toolkit.py
+pip install -r requirements.txt
+```
+
+Then run:
+
+```bash
+python src/protein_folding_toolkit.py
 ```
 
 A window opens and shows the protein every 100 steps.

@@ -1,7 +1,7 @@
 # header
 
 from annealing_functions import *
-from build_protein import *
+from protein import *
 
 Tstart = 100 # initial temperature
 Tfinal = 0.1 # final temperature
@@ -39,8 +39,8 @@ def plot_states(stateList, skip=100):
         plt.pause(0.1) # draw it and wait 0.1 s
     plt.show()
 
-
-initialProtein, N = build_protein('RURRRURRRRRRRURRRRRRRR')
-stateList, tList, tempList, EList = discreteAnnealing(initialProtein, tau, Tstart, Tfinal)
-plot_states(stateList)
+if __name__ == "__main__":
+    initialProtein, N = build_protein('RURRRURRRRRRRURRRRRRRR')
+    stateList, tList, tempList, EList = discreteAnnealing(initialProtein, tau, Tstart, Tfinal)
+    plot_states(stateList)
 
