@@ -1,8 +1,9 @@
 # Protein folding final project for PHY407, by Victor Choairy - 1011464149
-
 from random import random
 import numpy as np
 import matplotlib.pyplot as plt
+from build_protein import Protein
+from random import randrange, choice, random
 
 
 def acceptance(E_now, E_test, T):
@@ -19,12 +20,24 @@ def acceptance(E_now, E_test, T):
         return False
     
 
-def draw_normal(sigma):
-    """ Draw two random numbers from a normal distribution of mean 0, standard dev sigma. From Newman section 10.1.6 """
+def draw_normal_pm1(sigma):
+    """ Draw (+-1, +-1) based on a normal distribution of mean 0, standard dev sigma. """
     theta = 2*np.pi*random()
     z = random()
     r = (-2*sigma**2 * np.log(1 - z))**.5
-    return r*np.cos(theta), r*np.sin(theta)
+    dx, dy = r*np.cos(theta), r*np.sin(theta)
+
+    if dx < 0.5:
+        dx = -1
+    else:
+        dx = 1
+
+    if dy < 0.5:
+        dy = -1
+    else:
+        dy = 1
+    
+    return dx, dy
 
 
 def cooledT(T0, tau, t):
@@ -32,10 +45,10 @@ def cooledT(T0, tau, t):
     return T0 * np.exp(-t/tau)
 
 
-def annealing(f, initialGuess, tau, Tstart, Tfinal):
+def discreteAnnealing(initialProtein: Protein, tau, Tstart, Tfinal):
     """TODO"""
     stateList = [] # all guesses (states) during annealing
-    stateList.append(initialGuess)
+    stateList = [Protein(initialProtein.coords, initialProtein.width, initialProtein.height)]
 
     # track temperature and time for plotting cooling schedule
     tempList = []
@@ -49,8 +62,7 @@ def annealing(f, initialGuess, tau, Tstart, Tfinal):
     tempList.append(Tstart) 
     tList.append(0.)
     
-    x, y = initialGuess
-    E = f(x, y) # energy
+    E = initialProtein.calc_energy() # energy
     EList.append(E)
     
     while T > Tfinal:
@@ -58,18 +70,38 @@ def annealing(f, initialGuess, tau, Tstart, Tfinal):
         tList.append(t)
         T = cooledT(Tstart, tau, t) # update T
         tempList.append(T)
-        dx, dy = draw_normal(1.0) # pick a change in x and y from a normal distribution of mean 0 and std 1
-        x_new, y_new = x + dx, y + dy
-        E_new = f(x_new, y_new)
-        # decide whether to accept or reject the new state
+        while True:
+            i = randrange(len(initialProtein.coords)) # random monomer
+            dx, dy = choice([-1, 1]), choice([-1, 1]) # random diagonal step
+            x, y = initialProtein.coords[i]
+            new = (x + dx, y + dy)
+
+            inside = 0 <= new[0] < initialProtein.width and 0 <= new[1] < initialProtein.height
+            empty = new not in initialProtein.coords
+            # must stay one step from the monomers it's bonded to (i-1 and i+1, if they exist)
+            bonded_ok = True
+            for j in (i - 1, i + 1):
+                if 0 <= j < len(initialProtein.coords):
+                    nx, ny = initialProtein.coords[j]
+                    if abs(new[0] - nx) + abs(new[1] - ny) != 1:
+                        bonded_ok = False
+
+            if inside and empty and bonded_ok:
+                break
+
+        old = initialProtein.coords[i]
+        initialProtein.coords[i] = new
+        E_new = initialProtein.calc_energy()
         if acceptance(E_new, E, T):
-            x, y, E = x_new, y_new, E_new
+            E = E_new 
+        else:
+            initialProtein.coords[i] = old 
+
         EList.append(E)
-        # append current state to stateList
-        stateList.append((x, y))
+        stateList.append(Protein(initialProtein.coords, initialProtein.width, initialProtein.height))
 
     # last entry of stateList is the state corresponding to global min
-    return stateList, tList, tempList
+    return stateList, tList, tempList, EList
 
 
 
