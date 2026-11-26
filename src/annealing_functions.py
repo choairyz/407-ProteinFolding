@@ -54,32 +54,31 @@ def discreteAnnealing(initialProtein: Protein, tau, Tstart, Tfinal):
         tList.append(t)
         T = cooledT(Tstart, tau, t) # update T
         tempList.append(T)
-        while True:
-            i = randrange(len(initialProtein.coords)) # random monomer
-            dx, dy = choice([-1, 1]), choice([-1, 1]) # random diagonal step
-            x, y = initialProtein.coords[i]
-            new = (x + dx, y + dy)
+        # propose one move: a random monomer and a random diagonal step
+        i = randrange(len(initialProtein.coords)) # random monomer
+        dx, dy = choice([-1, 1]), choice([-1, 1]) # random diagonal step
+        x, y = initialProtein.coords[i]
+        new = (x + dx, y + dy)
 
-            inside = 0 <= new[0] < initialProtein.width and 0 <= new[1] < initialProtein.height
-            empty = new not in initialProtein.coords
-            # must stay one step from the monomers it's bonded to (i-1 and i+1, if they exist)
-            bonded_ok = True
-            for j in (i - 1, i + 1):
-                if 0 <= j < len(initialProtein.coords):
-                    nx, ny = initialProtein.coords[j]
-                    if abs(new[0] - nx) + abs(new[1] - ny) != 1:
-                        bonded_ok = False
+        inside = 0 <= new[0] < initialProtein.width and 0 <= new[1] < initialProtein.height
+        empty = new not in initialProtein.coords
+        # must stay one step from the monomers it's bonded to (i-1 and i+1, if they exist)
+        bonded_ok = True
+        for j in (i - 1, i + 1):
+            if 0 <= j < len(initialProtein.coords):
+                nx, ny = initialProtein.coords[j]
+                if abs(new[0] - nx) + abs(new[1] - ny) != 1:
+                    bonded_ok = False
 
-            if inside and empty and bonded_ok:
-                break
-
-        old = initialProtein.coords[i]
-        initialProtein.coords[i] = new
-        E_new = initialProtein.calc_energy()
-        if acceptance(E_new, E, T):
-            E = E_new 
-        else:
-            initialProtein.coords[i] = old 
+        # an invalid move counts as a rejected step
+        if inside and empty and bonded_ok:
+            old = initialProtein.coords[i]
+            initialProtein.coords[i] = new
+            E_new = initialProtein.calc_energy()
+            if acceptance(E_new, E, T):
+                E = E_new
+            else:
+                initialProtein.coords[i] = old
 
         EList.append(E)
         stateList.append(Protein(initialProtein.coords, initialProtein.width, initialProtein.height))
