@@ -11,27 +11,24 @@ class Protein:
     """A single chain of monomers on a width x height rectangular lattice, stored as a list of (x, y) sites
     in chain order: monomer i is bonded to monomers i-1 and i+1. Sites run from (0, 0) to (width-1, height-1)"""
     def __init__(self, coords: list[tuple[int, int]], width=25, height=25):
-        self.coords = [tuple(site) for site in coords]
-        self.width = width
-        self.height = height
-        self.is_valid() 
-        self.energy = self.calc_energy()
+        self.coords = [tuple(site) for site in coords] # monomer coordinates
+        self.width = width # lattice width
+        self.height = height # lattice height
+        self.is_valid() # check if specified protein arrangement is allowed
+        self.energy = self.calc_energy() # protein energy, -epsilon for each adjacent but not conected monomer
 
     def is_valid(self):
         """Check the chain fits the model: every monomer inside the lattice, no two on the same site, and each
         monomer one lattice step from the one before it. Prints the first problem found"""
         for i, (x, y) in enumerate(self.coords):
             if not (0 <= x < self.width and 0 <= y < self.height):
-                print(f"Error: monomer {i} at {(x, y)} is outside the {self.width} x {self.height} lattice")
-                return False
-        if len(set(self.coords)) != len(self.coords):
-            print("Error: at least two monomers are on the same site")
-            return False
+                raise ValueError(f"Error: monomer {i} at {(x, y)} is outside the {self.width} x {self.height} lattice")
+        if len(set(self.coords)) != len(self.coords): # sets do not count duplicates, so duplicates would be caught here
+            raise ValueError("Error: at least two monomers are on the same site")
         for i in range(1, len(self.coords)):
             (x0, y0), (x1, y1) = self.coords[i - 1], self.coords[i]
             if abs(x1 - x0) + abs(y1 - y0) != 1:
-                print(f"Error: monomers {i - 1} and {i} are bonded but not one lattice step apart")
-                return False
+                raise ValueError(f"Error: monomers {i - 1} and {i} are bonded but not one lattice step apart")
         return True
 
     def calc_energy(self):
@@ -55,7 +52,12 @@ class Protein:
         plt.plot(xs, ys, '-o', color='red', markersize=8)
         plt.xlim(-0.5, self.width - 0.5)
         plt.ylim(-0.5, self.height - 0.5)
-        plt.title(f"{title}, E = {self.energy}")
+        # a gridline through every lattice site
+        ax = plt.gca()
+        ax.set_xticks(range(self.width), minor=True)
+        ax.set_yticks(range(self.height), minor=True)
+        ax.grid(which='both', color='lightgray', linewidth=0.5)
+        plt.title(rf"{title}, Energy = ${-1 * self.energy}\epsilon$")
         if show:
             plt.show()
     
