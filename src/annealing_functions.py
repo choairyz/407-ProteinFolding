@@ -30,7 +30,7 @@ def cooledT(T0, tau, t):
 
 
 def discreteAnnealing(initialProtein: Protein, tau, Tstart, Tfinal):
-    """TODO"""
+    """Simulated annealing for a protein chain"""
     stateList = [] # all guesses (states) during annealing
     stateList = [Protein(initialProtein.coords, initialProtein.width, initialProtein.height)]
 
