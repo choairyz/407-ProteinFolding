@@ -56,6 +56,8 @@ Tstart = 100                   # initial temperature
 Tfinal = 0.1                   # final temperature: the run stops once T reaches this
 tau = 1000                     # time constant of the cooling schedule, in Monte Carlo steps
 schedule_name = 'exponential'  # or 'linear' or 'inverse'
+moves = 'RUUULURRRDDRDRR'      # starting shape: one letter per bond (see below)
+width, height = 25, 25         # lattice size, in sites
 seed_num = 1                   # seed for the random number generator
 ```
 
@@ -63,18 +65,19 @@ Bad settings stop the run before it starts, with an error saying what's wrong: a
 
 ### Starting shape
 
-Give the starting shape as a string of moves, one letter per bond: **R**ight, **L**eft, **U**p, **D**own. You start at one end of the chain and say which way each next monomer goes. A string of length N − 1 gives N monomers, centred in the lattice.
+Set `moves` to a string of moves, one letter per bond: **R**ight, **L**eft, **U**p, **D**own. You start at one end of the chain and say which way each next monomer goes. A string of length N − 1 gives N monomers, centred in the `width` × `height` lattice.
 
 ```python
-initialProtein, N = build_protein('RURRRURRRRRRRURRRRRRRR')   # 23 monomers
-initialProtein, N = build_protein('R' * 14)                  # straight chain of 15
+moves = 'RUUULURRRDDRDRR'          # 16 monomers
+moves = 'RURRRURRRRRRRURRRRRRRR'   # 23 monomers
+moves = 'R' * 14                   # straight chain of 15
 ```
 
 A string can't produce a broken chain, since every letter is one lattice step. A letter other than R, L, U or D, or a shape that runs into itself or leaves the lattice, stops the program with an error saying what's wrong.
 
 ## Example output
 
-Running `python src/protein_folding_toolkit.py` with the settings above and the starting shape `'RUUULURRRDDRDRR'` (16 monomers) shows these four figures. The run took 6,908 Monte Carlo steps, and the energy went from −1 to −8.
+Running `python src/protein_folding_toolkit.py` with the settings above (starting shape `'RUUULURRRDDRDRR'`, 16 monomers) shows these four figures. The run took 6,908 Monte Carlo steps, and the energy went from −1 to −8.
 
 | Starting structure | Final structure |
 |---|---|
