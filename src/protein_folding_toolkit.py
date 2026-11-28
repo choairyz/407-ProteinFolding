@@ -19,7 +19,7 @@ Tstart = 100 # initial temperature, in units of |epsilon|/k_B
 Tfinal = 0.1 # final temperature: the run stops once T reaches this
 tau = 1000 # time constant of the cooling schedule, in Monte Carlo steps
 schedule_name = 'exponential' # or 'linear' or 'inverse'
-start_shape = 'RUUULURRRDDRDRR' # starting shape: one letter per bond, R = right, L = left, U = up, D = down
+moves = 'RUUULURRRDDRDRR' # starting shape: one letter per bond, R = right, L = left, U = up, D = down
 width, height = 25, 25 # lattice size, in sites
 seed_num = 1 # seed for the random number generator
 
@@ -70,7 +70,7 @@ def plot_states(stateList, skip=100):
 
 if __name__ == "__main__":
     seed(seed_num)
-    initialProtein, N = build_protein(start_shape, width, height)
+    initialProtein, N = build_protein(moves, width, height)
     initialProtein.Plot(title='Protein: Initial State')
     stateList, tList, tempList, EList = discreteAnnealing(initialProtein, tau, Tstart, Tfinal, schedule)
     #plot_states(stateList)
