@@ -29,6 +29,7 @@ def build_protein(moves, width=25, height=25):
     return Protein([(x + shift_x, y + shift_y) for x, y in sites], width, height), N
 
 def plot_states(stateList, skip=100):
+    """Plots the protein structure every 100 steps during simulated annealing."""
     plt.figure()
     shown = list(range(0, len(stateList), skip))
     if shown[-1] != len(stateList) - 1:
@@ -40,7 +41,24 @@ def plot_states(stateList, skip=100):
     plt.show()
 
 if __name__ == "__main__":
-    initialProtein, N = build_protein('RURRRURRRRRRRURRRRRRRR')
+    initialProtein, N = build_protein('RUUULURRRDDRDRR')
+    initialProtein.Plot(title='Protein: Initial State')
     stateList, tList, tempList, EList = discreteAnnealing(initialProtein, tau, Tstart, Tfinal)
-    plot_states(stateList)
+    #plot_states(stateList)
+    stateList[-1].Plot(title='Protein: Final State')
+    
+    plt.plot(tList, tempList, color='orange')
+    plt.xlabel('Monte Carlo step')
+    plt.ylabel('Temperature')
+    plt.title('Cooling Schedule')
+    plt.show()
+
+    plt.plot(tList, EList, color='red', ms=1)
+    plt.xlabel('Monte Carlo step')
+    plt.ylabel('Protein chain energy')
+    plt.title('Protein energy during simulated annealing')
+    plt.show()
+
+
+
 
