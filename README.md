@@ -1,6 +1,6 @@
 # 407-ProteinFolding
 
-Final project for PHY407 (Fall 2026), topic 3: Protein Folding.
+Final project for PHY407 (Fall 2026), Protein Folding.
 
 A Markov Chain Monte Carlo simulation with simulated annealing that folds a simplified 2D protein, starting from a shape you choose.
 
