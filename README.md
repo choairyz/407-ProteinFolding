@@ -16,7 +16,7 @@ Temperatures are in units of |ε|/k<sub>B</sub>.
 
 Each Monte Carlo step:
 
-1. Lower the temperature following the cooling schedule, where t is the step number. The default is exponential, T = T<sub>start</sub> · e<sup>−t/τ</sup>; linear and inverse schedules are also available.
+1. Lower the temperature following the cooling schedule, where t is the step number. The default is exponential, T = T<sub>start</sub> · e<sup>−t/τ</sup>, but linear and inverse schedules are also available.
 2. Pick a random monomer and a random diagonal step (±1, ±1). The move is allowed only if the new site is inside the lattice, empty, and one step from the monomer's bonded neighbours. For a monomer in the middle of the chain, this is a "corner flip" across a bend. For an end monomer, it's a 90° turn around its neighbour. A move that isn't allowed counts as a rejected step.
 3. Accept or reject an allowed move with the Metropolis rule: always accept if the energy doesn't go up, otherwise accept with probability e<sup>−ΔE/T</sup>. A rejected move is undone.
 4. Record T, E and a copy of the protein.
