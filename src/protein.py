@@ -1,4 +1,12 @@
-# protein class, etc
+"""
+Protein folding final project for PHY407, by Victor Choairy - 1011464149
+
+The Protein class: a chain of identical monomers on a 2D rectangular lattice, stored as a list of (x, y) sites in
+chain order. It checks that a chain is allowed, computes its energy, and plots it.
+
+Requirements: Matplotlib.
+Outputs: none when run on its own; protein_folding_toolkit.py and annealing_functions.py use this class.
+"""
 from __future__ import annotations
 import matplotlib.pyplot as plt
 
@@ -15,11 +23,11 @@ class Protein:
         self.width = width # lattice width
         self.height = height # lattice height
         self.is_valid() # check if specified protein arrangement is allowed
-        self.energy = self.calc_energy() # protein energy, -epsilon for each adjacent but not conected monomer
+        self.energy = self.calc_energy() # protein energy: epsilon (negative) for each pair of adjacent monomers that aren't bonded
 
     def is_valid(self):
         """Check the chain fits the model: every monomer inside the lattice, no two on the same site, and each
-        monomer one lattice step from the one before it. Prints the first problem found"""
+        monomer one lattice step from the one before it. Raises a ValueError describing the first problem found"""
         for i, (x, y) in enumerate(self.coords):
             if not (0 <= x < self.width and 0 <= y < self.height):
                 raise ValueError(f"Error: monomer {i} at {(x, y)} is outside the {self.width} x {self.height} lattice")
@@ -52,7 +60,6 @@ class Protein:
         plt.plot(xs, ys, '-o', color='red', markersize=8)
         plt.xlim(-0.5, self.width - 0.5)
         plt.ylim(-0.5, self.height - 0.5)
-        # a gridline through every lattice site
         ax = plt.gca()
         ax.set_xticks(range(self.width), minor=True)
         ax.set_yticks(range(self.height), minor=True)
