@@ -18,8 +18,18 @@ from protein import Protein
 Tstart = 100 # initial temperature, in units of |epsilon|/k_B
 Tfinal = 0.1 # final temperature: the run stops once T reaches this
 tau = 1000 # time constant of the cooling schedule, in Monte Carlo steps
-schedule = exponential_cooling
+schedule_name = 'exponential' # or 'linear' or 'inverse'
 seed_num = 1 # seed for the random number generator
+
+if schedule_name == 'exponential':
+    schedule = exponential_cooling
+elif schedule_name == 'linear':
+    schedule = linear_cooling
+elif schedule_name == 'inverse':
+    schedule = inverse_cooling
+else:
+    raise ValueError('Not a valid cooling schedule. Has to be one of: exponential, linear or inverse')
+
 
 
 def build_protein(moves, width=25, height=25):
@@ -67,7 +77,7 @@ if __name__ == "__main__":
     plt.plot(tList, tempList, color='orange')
     plt.xlabel('Monte Carlo step')
     plt.ylabel(r'Temperature $T$ ($|\epsilon|/k_B$)')
-    plt.title(f'Cooling Schedule ({schedule.__name__})')
+    plt.title(f'Cooling Schedule ({schedule_name})')
     plt.show()
 
     plt.plot(tList, EList, color='red')

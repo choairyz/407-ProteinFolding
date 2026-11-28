@@ -7,7 +7,6 @@ chain order. It checks that a chain is allowed, computes its energy, and plots i
 Requirements: Matplotlib.
 Outputs: none when run on its own; protein_folding_toolkit.py and annealing_functions.py use this class.
 """
-from __future__ import annotations
 import matplotlib.pyplot as plt
 
 # lattice steps between monomers for each side
